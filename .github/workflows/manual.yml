@@ -1,0 +1,61 @@
+# This is a basic workflow that is manually triggered
+name: POE
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      # List contents of the directory
+      - name: List contents
+        run: ls
+
+      # Compiles classes to test 
+      - name: Compile classes
+        working-directory: ./src
+        run: javac -cp "../testresources/junit-platform-console-standalone-1.6.0.jar" ./main/*.java  "../test/main/*Test.java"  
+
+      # List contents of src to verify that classes compiled 
+      - name: List contents of src directory after compile
+        working-directory: ./src/main
+        run: ls
+        
+      # Copy compiled classes to test directory 
+      - name : Copy compiled classes to testresources directory 
+        working-directory: ./src/main
+        run: cp -t  "../../test/main" *.class
+        
+      # Copy compiled test classes to testresources directory 
+      - name : Copy compiled Test classes to testresources directory 
+        working-directory: ./test/main
+        run: cp -t  "../../testresources/" *.class 
+        
+      # List contents of test package
+      - name: List contents test package
+        working-directory: ./test/main
+        run: ls
+        
+      # Run tests and output report 
+      - name: Run Tests and create report 
+        working-directory: ./test
+        run: |
+         ls
+         java -jar  "../testresources/junit-platform-console-standalone-1.6.0.jar" -cp "." --select-package main
