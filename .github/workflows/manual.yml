@@ -30,8 +30,8 @@ jobs:
 
       # Compiles classes to test 
       - name: Compile classes
-        run: javac -cp "testresources/junit-platform-console-standalone-1.6.0.jar" src/main/*.java src/test/*Test.java  
-        working-directory: ${{ github.workspace }}
+  run: javac -cp "testresources/junit-platform-console-standalone-1.6.0.jar" src/main/*.java src/test/*.java
+  working-directory: ${{ github.workspace }}
         
       # List contents of src to verify that classes compiled 
       - name: List contents of src directory after compile
