@@ -30,27 +30,32 @@ jobs:
 
       # Compiles classes to test 
       - name: Compile classes
-  run: javac -cp "testresources/junit-platform-console-standalone-1.6.0.jar" src/main/*.java src/test/*.java
-  working-directory: ${{ github.workspace }}
-        
+        working-directory: ./src
+        run: javac -cp "../testresources/junit-platform-console-standalone-1.6.0.jar" ./main/Main.java ./main/Login.java ./main/Task.java "../test/main/LoginTest.java" "../test/main/TaskTest.java"  
+
       # List contents of src to verify that classes compiled 
       - name: List contents of src directory after compile
-        run: ls src/main
+        working-directory: ./src/main
+        run: ls
         
       # Copy compiled classes to test directory 
       - name : Copy compiled classes to testresources directory 
-        run: cp -t  "test/main" src/main/*.class
+        working-directory: ./src/main
+        run: cp -t  "../../test/main" *.class
         
       # Copy compiled test classes to testresources directory 
       - name : Copy compiled Test classes to testresources directory 
-        run: cp -t  "testresources" src/test/*Test.class 
+        working-directory: ./test/main
+        run: cp -t  "../../testresources/" *.class 
         
       # List contents of test package
       - name: List contents test package
-        run: ls test/main
+        working-directory: ./test/main
+        run: ls
         
       # Run tests and output report 
       - name: Run Tests and create report 
+        working-directory: ./test
         run: |
          ls
-         java -jar  "testresources/junit-platform-console-standalone-1.6.0.jar" -cp "." --select-package main
+         java -jar  "../testresources/junit-platform-console-standalone-1.6.0.jar" -cp "." --select-package main
