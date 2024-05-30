@@ -19,7 +19,7 @@ jobs:
         run: ls
 
       - name: Compile classes
-        working-directory: .
+        working-directory: ./src
         run: javac -cp "../testresources/junit-platform-console-standalone-1.6.0.jar" main/Main.java main/Login.java main/Task.java "../test/main/LoginTest.java" "../test/main/TaskTest.java"
 
 
