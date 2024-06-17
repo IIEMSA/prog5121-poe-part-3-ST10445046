@@ -15,36 +15,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: List root directory
-        run: ls -la
-
-      - name: List all directories
-        run: find . -type d
-
-      - name: List contents of all Java files
-        run: find . -name "*.java" -print
+      - name: List contents of the directory
+        run: ls
 
       - name: Compile classes
-        run: |
-          javac -cp "'./Test Libraries/junit-platform-console-standalone-1.6.0.jar'" ./src/main/Main.java ./src/main/Login.java ./src/main/Task.java "./Test Packages/main/LoginTest.java" "./Test Packages/main/TaskTest.java"
+        run: javac -cp "Test Libraries/junit-platform-console-standalone-1.6.0.jar" Main/main/Main.java Main/main/Login.java Main/main/Task.java "Test Packages/main/LoginTest.java" "Test Packages/main/TaskTest.java"
 
-      - name: List contents of src/main directory after compile
-        run: ls -la src/main
+      - name: List contents of src directory after compile
+        run: ls Main/src/main
 
       - name: Create testresources directory
         run: mkdir -p testresources/main
 
       - name: Copy compiled classes to testresources directory
-        run: cp src/main/Main.class src/main/Login.class src/main/Task.class testresources/main/
+        run: cp Main/src/main/Main.class Main/src/main/Login.class Main/src/main/Task.class testresources/main/
 
       - name: Copy compiled test classes to testresources directory
-        run: cp src/main/LoginTest.class src/main/TaskTest.class testresources/main/
+        run: cp Main/test/main/LoginTest.class Main/test/main/TaskTest.class testresources/main/
 
       - name: List contents of testresources directory
-        run: ls -la testresources/main
+        run: ls testresources/main
 
       - name: Run main class tests and create report
-        run: java -cp "'./Test Libraries/junit-platform-console-standalone-1.6.0.jar:testresources'" org.junit.platform.console.ConsoleLauncher --select-class main.LoginTest
+        run: java -cp "Test Libraries/junit-platform-console-standalone-1.6.0.jar:testresources" org.junit.platform.console.ConsoleLauncher --select-class main.LoginTest
 
-      - name: Run task class tests and create report
-        run: java -cp "'./Test Libraries/junit-platform-console-standalone-1.6.0.jar:testresources'" org.junit.platform.console.ConsoleLauncher --select-class main.TaskTest
+      - name: Run Tests and create report
+        run: |
+          ls Main/test
+          java -cp "Test Libraries/junit-platform-console-standalone-1.6.0.jar:testresources" org.junit.platform.console.ConsoleLauncher --select-class main.TaskTest
