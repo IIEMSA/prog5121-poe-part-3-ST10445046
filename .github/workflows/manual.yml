@@ -12,32 +12,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: List contents
-        run: ls
-
-      - name: Compile classes
-        working-directory: ./src
-        run: javac -cp "../testresources/junit-platform-console-standalone-1.6.0.jar" ./main/Main.java ./main/Login.java ./main/Task.java  "../test/main/LoginTest.java"  "../test/main/TaskTest.java"
-
-      - name: List contents of src directory after compile
-        working-directory: ./src/main
-        run: ls
-
-      - name: Copy compiled classes to testresources directory
-        working-directory: ./src/main
-        run: mkdir -p ../../testresources/main && cp Main.class Login.class Task.class ../../testresources/main/
-
-      - name: Copy compiled test classes to testresources directory
-        working-directory: ./test/main
-        run: mkdir -p ../../testresources/test && cp LoginTest.class TaskTest.class ../../testresources/test/
-
-      - name: List contents of testresources directory
-        working-directory: ../../testresources
+      - name: List contents of the repository root
         run: ls -R
 
-      - name: Run Messages Class tests and create report
-        working-directory: ./test
+      - name: List contents of src directory
+        run: ls -R src
+
+      - name: Compile classes
         run: |
-          java -jar ../testresources/junit-platform-console-standalone-1.6.0.jar -cp "../testresources/main:../testresources/test" --select-class main.LoginTest main.TaskTest
+          javac -cp "testresources/junit-platform-console-standalone-1.6.0.jar" \
+          src/main/Main.java src/main/Login.java src/main/Task.java \
+          src/test/main/LoginTest.java src/test/main/TaskTest.java
+
+      - name: List contents of src/main directory after compile
+        run: ls src/main
+
+      - name: Create testresources directory
+        run: mkdir -p testresources/main testresources/test
+
+      - name: Copy compiled classes to testresources directory
+        run: cp src/main/Main.class src/main/Login.class src/main/Task.class testresources/main/
+
+      - name: Copy compiled test classes to testresources directory
+        run: cp src/test/main/LoginTest.class src/test/main/TaskTest.class testresources/test/
+
+      - name: List contents of testresources directory
+        run: ls -R testresources
+
+      - name: Run Messages Class tests and create report
+        run: |
+          java -jar testresources/junit-platform-console-standalone-1.6.0.jar \
+          -cp "testresources/main:testresources/test" --select-class main.LoginTest main.TaskTest
