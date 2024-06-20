@@ -22,7 +22,7 @@ jobs:
         run: ls -R src
 
       - name: Compile classes
-        run: |
+        run: ./src
           javac -cp "testresources/junit-platform-console-standalone-1.6.0.jar" \
           src/main/Main.java src/main/Login.java src/main/Task.java \
           src/test/main/LoginTest.java src/test/main/TaskTest.java
