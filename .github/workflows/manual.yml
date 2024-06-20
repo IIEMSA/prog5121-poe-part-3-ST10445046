@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: List contents of the repository root
-        run: ls -R
+        run: ls -R 
 
       - name: List contents of src directory
         run: ls -R src
