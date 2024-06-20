@@ -19,7 +19,7 @@ jobs:
         run: ls -R
 
       - name: List contents of src directory
-        run: ls -R src
+        run: ls -R ./src
 
       - name: Compile classes
         run: |
