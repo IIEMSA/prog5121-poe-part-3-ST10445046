@@ -1,56 +1,64 @@
+# This is a basic workflow that is manually triggered
+
 name: POE
 
+# Controls when the workflow will run
 on:
+  # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  # This workflow contains a single job called "build"
   build:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      
+     # list contents or directory
+      - name: List contents
+        run: ls
+     # Compiles classes to test 
+      - name: compile classes
+        working-directory: ./src
+        run: javac -cp "../testresources/junit-platform-console-standalone-1.6.0.jar" ./main/Main.java ./main/Login.java ./main/Task.java  "../test/main/LoginTest.java"  "../test/main/TaskTest.java"  
 
-      - name: List repository contents
-        run: ls -R
-
-      - name: List contents of Main directory
-        run: ls -R Main
-
-      - name: List contents of Main/src directory
-        run: ls -R Main/src
-
-      - name: Compile main and test classes
-        working-directory: ./Main/src
+    # list contents of src to verify that classess compiled 
+      - name: List contents of src directory after compile
+        working-directory: ./src/main
+        run: ls
+        
+        
+       # copy compiled classes to test directory 
+      - name : copy compiled classes to testresources directory 
+        working-directory: ./src/main
+        run: cp -t  "../../test/main" Main.class Login.class Task.class
+        
+        #copy compiled tests 
+      - name : copy compiled Test classes to testresources directory 
+        working-directory: ./test/main
+        run: cp -t  "../../testresources/" Main.class Login.class Task.class
+        
+        # list contents or directory
+      - name: List contents test package
+        working-directory: ./test/main
+        run: ls
+        
+        #run Message Class tests and output report 
+      - name: run Messages Class tests and create report 
+        working-directory: ./test
         run: |
-          mkdir -p ../../test/main
-          javac -cp "../../testresources/junit-platform-console-standalone-1.6.0.jar" main/Main.java main/Login.java main/Task.java ../../Main/test/main/LoginTest.java ../../Main/test/main/TaskTest.java
-
-      - name: List contents of src/main directory after compile
-        working-directory: ./Main/src/main
-        run: ls
-
-      - name: List contents of test/main directory after compile
-        working-directory: ./Main/test/main
-        run: ls
-
-      - name: Copy compiled main classes to test directory
-        working-directory: ./Main/src/main
-        run: cp Main.class Login.class Task.class ../../../Main/test/main
-
-      - name: Copy compiled test classes to testresources directory
-        working-directory: ./Main/test/main
-        run: cp LoginTest.class TaskTest.class ../../../testresources
-
-      - name: List contents of testresources directory
-        working-directory: ./testresources
-        run: ls
-
-      - name: Run tests and create report
-        working-directory: ./Main/test
-        run: |
-          ls
-          java -jar ../../testresources/junit-platform-console-standalone-1.6.0.jar -cp . --select-class main.LoginTest main.TaskTest
+         ls
+         java -jar  "../testresources/junit-platform-console-standalone-1.6.0.jar" -cp "." --select-class  main.LoginTest  main.TaskTest
+         
+         
