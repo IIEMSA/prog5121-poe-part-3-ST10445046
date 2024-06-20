@@ -17,14 +17,24 @@ jobs:
       - name: List repository contents
         run: ls -R
 
+      - name: List contents of Main directory
+        run: ls -R Main
+
+      - name: List contents of Main/src directory
+        run: ls -R Main/src
+
       - name: Compile main and test classes
         working-directory: ./Main/src
         run: |
           mkdir -p ../../test/main
           javac -cp "../../testresources/junit-platform-console-standalone-1.6.0.jar" main/Main.java main/Login.java main/Task.java ../../Main/test/main/LoginTest.java ../../Main/test/main/TaskTest.java
 
-      - name: List contents of src directory after compile
+      - name: List contents of src/main directory after compile
         working-directory: ./Main/src/main
+        run: ls
+
+      - name: List contents of test/main directory after compile
+        working-directory: ./Main/test/main
         run: ls
 
       - name: Copy compiled main classes to test directory
@@ -35,8 +45,8 @@ jobs:
         working-directory: ./Main/test/main
         run: cp LoginTest.class TaskTest.class ../../../testresources
 
-      - name: List contents of test package
-        working-directory: ./Main/test/main
+      - name: List contents of testresources directory
+        working-directory: ./testresources
         run: ls
 
       - name: Run tests and create report
