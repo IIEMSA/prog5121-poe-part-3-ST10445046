@@ -19,7 +19,7 @@ jobs:
         run: ls -R 
 
       - name: List contents of src directory
-        run: ls -R main
+        run: ls -R Main
 
       - name: Compile classes
         run: main
@@ -43,6 +43,6 @@ jobs:
         run: ls -R testresources
 
       - name: Run Messages Class tests and create report
-        run: test
+        run: Main
           java -jar testresources/junit-platform-console-standalone-1.6.0.jar \
           -cp "testresources/main:testresources/test" --select-class main.LoginTest main.TaskTest
